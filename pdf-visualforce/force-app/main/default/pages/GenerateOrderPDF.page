@@ -1,173 +1,148 @@
-<apex:page standardController="Order" 
-    action="{!savePDF}" 
+<apex:page standardController="Order"  
     showHeader="false" 
     applyBodyTag="false" 
     docType="html-5.0" 
     readOnly="true" 
     renderAs="advanced_pdf"
-    extensions="OrderPDFController">
-    <!-- <apex:stylesheet value="{!$Resource.orderPDFStyle}"/> -->
-    <!-- <body>
+    extensions="OrderPDFController"
+    action="{!savePDF}">
+    <apex:stylesheet value="{!$Resource.orderPDFStyle}"/>
+    <body>
         <div class="solid-border">
             <div class="row">
                 <div class="column-18">
-                    <apex:image style="height: 60px; width: 75px; margin-top: 5px" value="{!currentOrder.companyLogo}"/>
+                    <apex:image style="height: 45px; width: 120px; margin-top: 5px" value="{!$Resource.PremierPetLogo}"/>
                 </div>
                 <div class="column-40">
-                    <div class="header-row">{!currentOrder.shippingName}</div>
-                    <div class="header-row">CNPJ: {!currentOrder.shippingCnpj} | I.E: {!currentOrder.shippingStateRegistration}</div>
-                    <div class="header-row">{!currentOrder.shippingAddress}</div>
+                    <div class="header-row">{!myOrder.addressName}</div>
+                    <div class="header-row">Número Pedido ERP: {!myOrder.externalOrderNumber}</div>
+                    <div class="header-row">{!myOrder.addressCode}</div>
                 </div>
-                <div class="column-18">
+            </div>
+            <div class="row header-info-columns">
+                <div class="column">
                     <div class="header-row">Data Pedido</div>
                     <div class="header-row">Número Pedido</div>
-                    <div class="header-row">Cód ERP</div>
+                    <div class="header-row">Data ERP</div>
                     <div class="header-row">Representante</div>
                 </div>
                 <div class="column-18-no-border">
-                    <div class="header-row">{!currentOrder.effectiveDate}</div>
-                    <div class="header-row">{!currentOrder.orderNumber}</div>
-                    <div class="header-row">{!currentOrder.erpCode}</div>
-                    <div class="header-row">{!currentOrder.createdFirstName}</div>
+                    <div class="header-row">{!myOrder.effectiveDate}</div>
+                    <div class="header-row">{!myOrder.orderNumberSF}</div>
+                    <div class="header-row">{!myOrder.deliveryDateERP}</div>
+                    <div class="header-row">{!myOrder.createdBy}</div>
                 </div>
             </div>
         </div>
 
         <div>
             <div class="customer-infos-section">Informações do Cliente</div>
-            <div class="green-line-divisor"></div>
+            <div class="orange-line-divisor"></div>
 
             <div class="row">
                 <div class="column">
-                    <label><span class="property-style">Razão Social:</span> <span class="field-value">{!currentOrder.accountCompanyName}</span></label>
+                    <label><span class="property-style">Razão Social:</span> <span class="field-value">{!myOrder.accountName}</span></label>
                 </div>
                 <div class="column">
-                    <label><span class="property-style">I.E:</span> <span class="field-value">{!currentOrder.accountStateRegistration}</span></label>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="column">
-                    <label><span class="property-style">CPF/CNPJ:</span> <span class="field-value">{!currentOrder.accountCPFCNPJ}</span></label>
-                </div>
-                <div class="column"></div>
-            </div>
-
-            <div class="row">
-                <div class="column">
-                    <label><span class="property-style">Telefone:</span> <span class="field-value">{!currentOrder.accountPhone}</span></label>
+                    <label><span class="property-style">Endereço:</span> <span class="field-value">{!myOrder.addressName}</span></label>
                 </div>
                 <div class="column">
-                    <label><span class="property-style">E-mail:</span> <span class="field-value">{!currentOrder.accountBillingEmail}</span></label>
+                    <label><span class="property-style">CNPJ:</span> <span class="field-value">{!myOrder.accountCnpj}</span></label>
                 </div>
             </div>
 
             <div class="customer-infos-section">Informações do Pedido</div>
-            <div class="green-line-divisor"></div>
+            <div class="orange-line-divisor"></div>
 
             <div class="row">
                 <div class="column">
-                    <label><span class="property-style">Tipo:</span> <span class="field-value">{!currentOrder.type}</span></label>
+                    <label><span class="property-style">Status:</span> <span class="field-value">{!myOrder.status}</span></label>
                 </div>
                 <div class="column">
-                    <label><span class="property-style">Lista Preços:</span> <span class="field-value">{!currentOrder.orderPricebook}</span></label>
+                    <label><span class="property-style">Lista Preços:</span> <span class="field-value">{!myOrder.pricebookName}</span></label>
+                </div>
+                <div class="column">
+                    <label><span class="property-style">Moeda:</span> <span class="field-value">{!myOrder.orderCurrency}</span></label>
                 </div>
             </div>
 
             <div class="row">
                 <div class="column">
-                    <label><span class="property-style">Condição Pagamento:</span> <span class="field-value">{!currentOrder.paymentCondition}</span></label>
-                </div>
-                <div class="column">
-                    <label><span class="property-style">Safra:</span> <span class="field-value">{!currentOrder.orderHarvest}</span></label>
+                    <label><span class="property-style">Condição Pagamento:</span> <span class="field-value">{!myOrder.paymentConditionName}</span></label>
                 </div>
             </div>
 
             <div class="row">
                 <div class="column">
-                    <label><span class="property-style">Cultura:</span> <span class="field-value">{!currentOrder.orderCulture}</span></label>
-                </div>
-                <div class="column">
-                    <label><span class="property-style">Forma de Pagamento:</span> <span class="field-value">{!currentOrder.paymentMethod}</span></label>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="column"></div>
-                <div class="column">
-                    <label><span class="property-style">Data Pagamento:</span> <span class="field-value">{!currentOrder.firstPaymentDate}</span></label>
+                    <label><span class="property-style">Forma de Pagamento:</span> <span class="field-value">{!myOrder.paymentMethodName}</span></label>
                 </div>
             </div>
 
             <div class="row">
                 <div class="column">
-                    <label><span class="property-style">Representante:</span> <span class="field-value">{!currentOrder.ownerName}</span></label>
+                    <label><span class="property-style">Centro de Distribuição:</span> <span class="field-value">{!myOrder.distributionCenterName}</span></label>
                 </div>
                 <div class="column">
-                    <label><span class="property-style">Email Representante:</span> <span class="field-value">{!currentOrder.ownerEmail}</span></label>
+                    <label><span class="property-style">Data de Entrega:</span> <span class="field-value">{!myOrder.deliveryDate}</span></label>
+                </div>
+                <div class="column">
+                    <label><span class="property-style">Data Final:</span> <span class="field-value">{!myOrder.endDate}</span></label>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="column">
+                    <label><span class="property-style">Representante:</span> <span class="field-value">{!myOrder.ownerFullName}</span></label>
+                </div>
+                <div class="column">
+                    <label><span class="property-style">Tipo de Frete:</span> <span class="field-value">{!myOrder.typeOfFreight}</span></label>
                 </div>
             </div>
 
             <div class="customer-infos-section">Informações dos itens do pedido</div>
-            <div class="green-line-divisor"></div>
+            <div class="orange-line-divisor"></div>
 
-            <table style="margin-top: 20px">
-                <div class="title-divisor"></div>
-                <tr style="width: 100%">
-                    <th class="item-width">Código</th>
+            <table class="item-table">
+                <tr>
+                    <th class="item-width">Cód SF</th>
+                    <th class="item-width">Cód ERP</th>
                     <th class="item-width">Produto</th>
                     <th class="item-width">Qtd</th>
-                    <th class="item-width">Unid. Medida</th>
+                    <th class="item-width">TOTVs?</th>
                     <th class="item-width">Valor Unit.</th>
                     <th class="item-width">Valor Total</th>
+                    <th class="item-width">Desconto</th>
                 </tr>
-                <div class="title-divisor"></div>
-
-                <apex:repeat value="{!currentOrder.orderItems}" var="item">
-                    <tr style="width: 100%">
-                        <td class="item-width">{!item.productCode}</td>
-                        <td class="item-width">{!item.productName}</td>
-                        <td class="item-width">{!item.quantity}</td>
-                        <td class="item-width">{!item.unitOfMeasurement}</td>
-                        <td class="item-width">{!item.unitPrice}</td>
-                        <td class="item-width">{!item.totalPrice}</td>
+                <tr>
+                    <td colspan="8" class="title-divisor"></td>
+                </tr>
+                <apex:repeat value="{!myOrder.orderItems}" var="item">
+                    <tr>
+                        <td>{!item.productCode}</td>
+                        <td>{!item.orderItemCode}</td>
+                        <td>{!item.productName}</td>
+                        <td>{!item.quantity}</td>
+                        <td>{!item.totvsItem}</td>
+                        <td>{!item.unitPrice}</td>
+                        <td>{!item.totalPrice}</td>
+                        <td>{!item.discount}</td>
                     </tr>
-                    <div class="black-line-divisor"></div>
+                    <tr>
+                        <td colspan="8" class="black-line-divisor"></td>
+                    </tr>
                 </apex:repeat>
             </table>
 
             <div class="row" style="text-align: right">
-                <span class="field-value">Valor Total do Pedido {!currentOrder.totalAmount}</span>
+                <span class="field-value">Valor Total do Pedido {!myOrder.totalAmount}</span>
             </div>
 
-            <div class="customer-infos-section">Informações dos pagamentos do pedido</div>
-            <div class="green-line-divisor"></div>
-
-            <table style="margin-top: 20px">
-                <div class="title-divisor"></div>
-                <tr style="width: 100%">
-                    <th class="payment-width">Tipo</th>
-                    <th class="payment-width">Valor do Pagamento</th>
-                    <th class="payment-width">Data de Vencimento</th>
-                </tr>
-                <div class="title-divisor"></div>
-
-                <apex:repeat value="{!currentOrder.payments}" var="payment">
-                    <tr style="width: 100%">
-                        <td class="payment-width">{!payment.type}</td>
-                        <td class="payment-width">{!payment.paymentValue}</td>
-                        <td class="payment-width">{!payment.dueDate}</td>
-                    </tr>
-                    <div class="black-line-divisor"></div>
-                </apex:repeat>
-            </table>
-
-            <div class="customer-infos-section">Informações Importantes</div>
-            <div class="green-line-divisor"></div>
+            <div class="customer-infos-section">Informações Gerais</div>
+            <div class="orange-line-divisor"></div>
 
             <div class="general-infos">
-                <apex:outputText value="{!currentOrder.generalInformations}" escape="false" />
+                <apex:outputText value="{!myOrder.observations}" escape="false" />
             </div>
         </div>
-    </body> -->
+    </body>
 </apex:page>

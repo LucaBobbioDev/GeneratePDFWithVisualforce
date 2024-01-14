@@ -38,6 +38,20 @@ body {
     margin-bottom: 5px;
 }
 
+.header-info-columns {
+    clear: both;
+}
+
+.header-info-columns .column {
+    float: left;
+    width: 50%;
+}
+
+.header-info-columns .column-18-no-border {
+    display: inline-block;
+    width: 50%;
+}
+
 .customer-infos-section {
     font-size: 18px;
     font-weight: bold;
@@ -47,7 +61,7 @@ body {
 
 .orange-line-divisor {
     height: 2px;
-    background-color: #cc8100;
+    background-color: #ec9d15;
     margin-bottom: 10px;
 }
 
@@ -59,8 +73,13 @@ body {
     margin-left: 5px;
 }
 
-.item-width {
-    width: 12%;
+.item-table {
+    width: 100%;
+    table-layout: fixed;
+}
+
+.item-table td {
+    text-align: left;
 }
 
 .title-divisor {
