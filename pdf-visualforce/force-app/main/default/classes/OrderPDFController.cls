@@ -1,43 +1,55 @@
 public with sharing class OrderPDFController {
     public Order order {get;set;}
+    public OrderData myOrder {get;set;}
+    private Blob pdfBlob;
     public OrderPDFController(ApexPages.StandardController standardPageController) {
         order = (Order) standardPageController.getRecord();
         Id orderId = Id.valueOf(String.escapeSingleQuotes(ApexPages.currentPage().getParameters().get('Id').escapeHtml4()));
         System.debug('orderId: ' + orderId);
         if (orderId != null) {
             Order order = getOrder(orderId);
-            OrderPDFController.OrderData currentOrder = new OrderPDFController.OrderData(order);
+            this.myOrder = new OrderPDFController.OrderData(order);
             
             List<OrderItem> orderItems = getOrderItems(orderId);
-            currentOrder.orderItems = new List<OrderPDFController.OrderItemData>();
+            this.myOrder.orderItems = new List<OrderPDFController.OrderItemData>();
             for (OrderItem currentItem : orderItems) {
-                currentOrder.orderItems.add(new OrderPDFController.OrderItemData(currentItem));
+                this.myOrder.orderItems.add(new OrderPDFController.OrderItemData(currentItem));
             }
         }
     }
 
-    public PageReference savePDF() {
-        Id orderId = Id.valueOf(String.escapeSingleQuotes(ApexPages.currentPage().getParameters().get('Id').escapeHtml4()));
+    @future(callout=true)
+    public static void generatePDFAsync(Id orderId) {
         PageReference currentPDf = Page.GenerateOrderPDF;
         currentPDf.getParameters().put('id', orderId);
+
         Blob pdfBlob;
         if (!Test.isRunningTest()) {
-			pdfBlob = currentPDf.getContent();
-		} else {
-			pdfBlob = Blob.valueOf('PDF file...');
-		}
+            pdfBlob = currentPDf.getContent();
+        } else {
+            pdfBlob = Blob.valueOf('PDF file...');
+        }
 
         List<Attachment> attRelatedToOrder = [SELECT Id FROM Attachment WHERE ParentId =: orderId];
 
         Attachment pdf = new Attachment();
         pdf.Body = pdfBlob;
-        //pdf.Name = 'Pedido ' + this.currentOrder.orderNumber + ' ' + String.valueOf(System.today()) + ' V' + attRelatedToOrder.size() + '.pdf';
         pdf.IsPrivate = false;
         pdf.ParentId = orderId;
         insert pdf;
+    }
 
-        Pagereference newTab = new Pagereference('/servlet/servlet.FileDownload?file=' + pdf.Id);
-        return newTab;
+    public Blob getGeneratedPDF() {
+        if (pdfBlob == null) {
+            Id orderId = Id.valueOf(String.escapeSingleQuotes(ApexPages.currentPage().getParameters().get('Id').escapeHtml4()));
+            generatePDFAsync(orderId);
+        }
+        return pdfBlob;
+    }
+
+    public PageReference savePDF() {
+        Blob pdfBlob = getGeneratedPDF();
+        return null;
     }
 
     public static Order getOrder(Id orderId) {
