@@ -76,6 +76,7 @@ public with sharing class OrderPDFController {
     public static List<OrderItem> getOrderItems(String orderId) {
         List<OrderItem> orderItems = [
             SELECT Id,
+                   OrderId,
                    Discount__c,
                    Quantity,
                    UnitPrice,
@@ -154,7 +155,6 @@ public with sharing class OrderPDFController {
         public String productName {get; set;}
         public Decimal quantity {get; set;}
         public String unitPrice {get; set;}
-        public String listPrice {get; set;}
         public String totalPrice {get; set;}
         public String discount {get; set;}
         public Boolean totvsItem {get; set;}
@@ -169,7 +169,6 @@ public with sharing class OrderPDFController {
             this.productName = item.Product2.Name;
             this.quantity = item.Quantity;
             this.unitPrice = String.valueOf(item.UnitPrice); 
-            this.listPrice = String.valueOf(item.ListPrice); 
             this.totalPrice = String.valueOf(item.TotalPrice);
             this.discount = String.valueOf(item.Discount__c);
             this.totvsItem = item.TotvsItem__c;
